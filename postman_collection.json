@@ -1,0 +1,145 @@
+
+{ "info": { "name": "Telegram Auth Bot API", "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/health",
+          "host": ["{{base_url}}"],
+          "path": ["health"]
+        }
+      }
+    },
+    {
+      "name": "Generate Link - New Client",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "x-api-key",
+            "value": "{{api_key}}",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"company_id\": 123456,\n  \"client_id\": 789012,\n  \"phone\": \"79261234567\",\n  \"client_status\": \"new\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/generate-link",
+          "host": ["{{base_url}}"],
+          "path": ["api", "generate-link"]
+        }
+      }
+    },
+    {
+      "name": "Generate Link - Old Client",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"company_id\": 123456,\n  \"client_id\": 789013,\n  \"phone\": \"79267654321\",\n  \"client_status\": \"old\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/generate-link",
+          "host": ["{{base_url}}"],
+          "path": ["api", "generate-link"]
+        }
+      }
+    },
+    {
+      "name": "Get Auth Status",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/auth-status/:company_id/:client_id",
+          "host": ["{{base_url}}"],
+          "path": ["api", "auth-status", ":company_id", ":client_id"],
+          "variable": [
+            {
+              "key": "company_id",
+              "value": "123456"
+            },
+            {
+              "key": "client_id",
+              "value": "789012"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Statistics",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/stats",
+          "host": ["{{base_url}}"],
+          "path": ["api", "stats"]
+        }
+      }
+    },
+    {
+      "name": "Get Retry Queue",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/retry-queue",
+          "host": ["{{base_url}}"],
+          "path": ["api", "retry-queue"]
+        }
+      }
+    },
+    {
+      "name": "Resend Webhook",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/resend-webhook/:company_id/:client_id",
+          "host": ["{{base_url}}"],
+          "path": ["api", "resend-webhook", ":company_id", ":client_id"],
+          "variable": [
+            {
+              "key": "company_id",
+              "value": "123456"
+            },
+            {
+              "key": "client_id",
+              "value": "789012"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "api_key",
+      "value": "your_api_key_here",
+      "type": "string"
+    }
+  ]
+}

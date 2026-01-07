@@ -1,0 +1,13 @@
+version: '3'
+services:
+  bot:
+    build: .
+    container_name: telegram-auth-bot
+    env_file: .env
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    ports:
+      - "3010:3010"
+    restart: unless-stopped
+    user: "1000:1000"

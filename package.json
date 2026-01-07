@@ -1,0 +1,72 @@
+{
+  "name": "telegram-auth-bot",
+  "version": "2.0.0",
+  "description": "Telegram bot for client authentication with YClients integration and auto-generated encryption",
+  "main": "index.js",
+  "scripts": {
+    "preinstall": "echo '📦 Установка зависимостей...'",
+    "postinstall": "npm run setup-env",
+    "setup-env": "node scripts/setup-env.js",
+    "init": "node init.js",
+    "start": "npm run check-env && node index.js",
+    "dev": "npm run check-env && nodemon index.js",
+    "check-env": "node scripts/check-env.js",
+    "generate-key": "node -e \"console.log('🔑 Новый ключ:', require('crypto').randomBytes(32).toString('hex'))\"",
+    "test": "node test.js",
+    "migrate": "node scripts/migrate.js",
+    "cleanup": "node scripts/cleanup.js",
+    "stats": "node scripts/stats.js",
+    "export": "node scripts/exportData.js",
+    "clear-queue": "node scripts/clearQueue.js",
+    "health": "node scripts/checkHealth.js",
+    "backup": "./deployment/backup.sh",
+    "restore": "./deployment/restore.sh",
+    "deploy": "./deployment/deploy.sh production",
+    "pm2:start": "pm2 start ecosystem.config.js",
+    "pm2:stop": "pm2 stop telegram-auth-bot",
+    "pm2:restart": "pm2 restart telegram-auth-bot",
+    "pm2:logs": "pm2 logs telegram-auth-bot",
+    "pm2:delete": "pm2 delete telegram-auth-bot",
+    "docker:build": "docker build -t telegram-auth-bot .",
+    "docker:run": "docker-compose up -d",
+    "docker:stop": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:restart": "docker-compose restart"
+  },
+  "keywords": [
+    "telegram",
+    "bot",
+    "authentication",
+    "yclients",
+    "webhook",
+    "gdpr",
+    "consent",
+    "encryption",
+    "nodejs"
+  ],
+  "author": "Your Name <your-email@example.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/telegram-auth-bot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/telegram-auth-bot/issues"
+  },
+  "homepage": "https://github.com/yourusername/telegram-auth-bot#readme",
+  "dependencies": {
+    "axios": "^1.13.2",
+    "dotenv": "^16.4.1",
+    "express": "^4.18.2",
+    "node-cron": "^3.0.3",
+    "node-telegram-bot-api": "^0.64.0",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
+}
