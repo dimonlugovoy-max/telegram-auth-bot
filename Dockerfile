@@ -1,18 +1,28 @@
+FROM node:18-alpine
 
-# Установка приложения
 WORKDIR /app
+
+# Копируем package.json и устанавливаем зависимости
 COPY package*.json ./
 RUN npm ci --only=production
 
-# Копируем исходники
+# Копируем остальные файлы
 COPY . .
 
-# Создаём директории
-RUN mkdir -p logs && mkdir -p data && touch bot.db
+# Создаём папки для данных и логов
+RUN mkdir -p /app/logs /app/data && touch /app/bot.db
 
-# Устанавливаем права
-RUN chmod 600 .env* 2>/dev/null || true
-RUN chown -R node:node /app
+# Устанавливаем права (безопасность)
+RUN chown -R node:node /app && chmod 600 .env* 2>/dev/null || true
+
+# Переключаемся на пользователя node
 USER node
 
-# Объём для БД и логов
+# Объявляем тома
+VOLUME ["/app/data", "/app/logs"]
+
+# Открываем порт
+EXPOSE 3010
+
+# Запускаем бота
+CMD ["node", "index.js"]
