@@ -1,0 +1,62 @@
+# /etc/nginx/sites-available/telegram-bot
+
+server {
+    server_name autcli.no-admin.ru www.autcli.no-admin.ru;
+
+    # Логи
+    access_log /var/log/nginx/telegram-bot-access.log;
+    error_log /var/log/nginx/telegram-bot-error.log;
+
+    # Основное проксирование
+    location / {
+        proxy_pass https://autcli.no-admin.ru;  # ⚠️ Убедись, что бот слушает 3010
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+
+        # Таймауты
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
+    }
+
+    # API с rate limiting
+    location /api/ {
+        limit_req zone=api_limit burst=20 nodelay;
+        limit_req_status 429;
+
+        proxy_pass https://autcli.no-admin.ru;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # Health check без rate limiting
+    location /health {
+        proxy_pass https://autcli.no-admin.ru/health;
+        access_log off;
+    }
+
+    # Запрет прямого доступа к приватным путям
+    location ~ ^/(logs|data|config|\.env|ecosystem\.config\.js) {
+        deny all;
+        return 404;
+    }
+
+    # Запрет выполнения .sh, .bak и т.д.
+    location ~ \.(sh|bak|backup|tar|zip|sql)$ {
+        deny all;
+        return 404;
+    }
+
+    # SSL будет добавлен автоматически Certbot
+}
+
+# Rate limiting зона: 10 запросов/сек с пиковым до 20
+limit_req_zone $binary_remote_addr zone=api_limit:10m rate=10r/s;
